@@ -1,0 +1,73 @@
+﻿01-前期准备以及项目搭建
+技术：ASP.NET CORE + mysql + Dapper
+网页模板： LayUI http://www.layui.com
+源码管理   码市codding git
+
+02-数据库设计以及Dapper的使用
+ 博客表，分类表，管理员表
+ Dapper：实现分类表、博客表增删改查，
+ 实现分类表、博客表实体类
+ 通过TestController进行测试，通过测试
+
+03-构建博客后台
+创建Admin区域
+区域配置：在Startup类Configure中进行路由配置
+//全局配置方式，不太好，每个区域的默认加载控制器可能是不一样的             
+routes.MapRoute(
+	    name: "areaRoute",
+                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+//推荐这个方式               
+routes.MapAreaRoute(
+                    name: "systemArea",
+                    areaName: "Admin",
+                    template: "Admin/{controller=Home}/{action=index}");//URL模板  template: "Admin/{controller=Home}/{action=index}/{id？}");//表示可以传参数
+
+问题：传多个参数？是不是只能传id？
+
+再在控制器上添加[Area(Admin")]特性
+
+添加后台登录LoginController，Login文件夹views
+添加后台主页HTML（Top，Left，Welcome）
+添加博客后台页，添加添加编辑删除博客
+{
+TextBox和TextBoxFor区别
+类型：松散类型   强类型
+参数：字符串      Lambda表达式
+}
+ViewBag  Controller里面的运行时解析对象 dynamic
+前端页面数据传输到后端的方式：form表单提交
+			Ajax数据提交，Ajax还可以将数据返回到后台 $.Ajax
+			Post提交 $.post
+
+04-LayUI分页以及layui编辑器使用
+在Html表单里面使用了@Html.AntiForgeryToken()就可以阻止CSRF攻击
+select count(1)/count(*)区别：
+
+前端分页：
+使用layui分页组件，通过$.post发送pageNo（页码）、pageSize（每页条数）请求数据，
+获取后台返回的json数据（自带数据格式首字母小写在进行驼峰命名），进行html拼接
+
+后台分页：
+一般情况下，客户端通过传递 pageNo（页码）、pageSize（每页条数）两个参数去分页查询数据库中的数据，
+在数据量较小（元组百/千级）时使用 MySQL自带的 limit 来解决这个问题
+
+但是数据量达到了 万级到百万级 sql语句的性能将会影响数据的返回，这时需要利用主键或者唯一索引进行数据分页；
+
+添加查询条件方法，添加sql字符串过滤工具类
+
+添加layui编辑器
+实现图片上传下载功能：hostingEnv在控制器的构造函数注入，hostingEnv.WebrootPath //存在问题前端打开图片上传会导致程序关闭，但后台仍然在运行，网页可以访问服务器
+
+05-后台登录以及前台整合
+session使用方法：
+	在Startup.cs文件中的ConfigureServices方法中添加：services.AddSession();
+	在Startup.cs文件中的Configure方法中加上这一句代码：app.UseSession();
+ 
+	第二步从nuget安装Microsoft.AspNetCore.Mvc引用，直接使用自带的方法进行设置和获取session
+	不过自带的方法设置和获取的session值是byte[]类型的，可以从nuget安装并引用Microsoft.AspNetCore.Http并使用里面的扩展方法using Microsoft.AspNetCore.Http;
+
+前台整合：分页显示，加入条件搜索，以及日期，分类编号
+a标签点击事件无法触发：方法名字和其他标签的id相同
+
+
+ 

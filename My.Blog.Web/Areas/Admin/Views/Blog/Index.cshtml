@@ -1,0 +1,176 @@
+﻿@model List<My.Blog.Model.Blog>
+<blockquote class="layui-elem-quote">文章管理</blockquote>
+<style>
+    div.first {
+        padding: 10px;
+    }
+</style>
+<div class="first">
+    <div>
+        <a class="layui-btn" href="~/Admin/Blog/Add">
+            <i class="layui-icon">&#xe654;</i>添加
+        </a>
+        <div class="layui-input-inline">
+            <input id="search_key" class="layui-input" type="text" placeholder="标题关键字" />
+        </div>
+        <label>发布时间：</label>
+        <div class="layui-input-inline">
+            <input id="search_start" class="layui-input" type="text" placeholder="开始时间"/>
+        </div>
+        <label>~</label>
+        <div class="layui-input-inline">
+            <input id="search_end" class="layui-input" type="text" placeholder="结束时间"/>
+        </div>
+        <div class="layui-input-inline">
+            <select id="search_number" class="layui-select">
+                <option value="">--所有分类--</option>
+                @foreach (My.Blog.Model.Category ca in ViewBag.calist) {
+                    <option value="@ca.Number">@ca.CategoryName</option>
+                }
+            </select>
+        </div>
+        <div class="layui-input-inline">
+            <button class="layui-btn layui-btn-radius layui-btn-normal" type="button" onclick="search()" >
+            <i class="layui-icon">&#xe615;</i>查询</button>
+        </div>
+    </div>
+    <table class="layui-table">
+        <thead>
+            <tr>
+                <th>发布时间</th>
+                <th>博客标题</th>
+                <th>所属分类</th>
+                <th>访问量</th>
+                <th>排序号</th>
+                <th>管理</th>
+            </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+    </table>
+
+    <div>
+        总共有<span id="totalCount"></span>篇博客，
+        当前是第<span id="pageIndex"></span>页/共<span id="pageCount"></span>页
+    </div>
+    <div id="pages"></div> 
+</div>
+
+<script>
+
+    //日期控件设置
+    layui.use('laydate', function () {
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        document.getElementById('search_start').onclick = function () {
+            laydate({ elem: this }); //指定元素
+        }
+
+        document.getElementById('search_end').onclick = function () {
+            laydate({ elem: this }); //指定元素
+        }
+    });
+
+    //分页显示
+    var pagesize = 15;//每页数据
+    layui.use(['laypage','layer'], function () {
+        var laypage = layui.laypage, layer = layui.layer, $ = layui.jquery;
+        var url = "/Admin/Blog/GetBlogTotalCount?t=" + new Date().valueOf();
+        var postData = getdata();
+        $.post(url, postData, function (count) {
+            console.log("取到的博客总数：" + count);
+            $('#totalCount').html(count);
+            $('#pageCount').html(Math.ceil(count / pagesize));
+            //执行一个laypage实例
+            laypage({
+                cont: 'pages',
+                pages: Math.ceil(count/pagesize),//js数据除法带小数
+                jump: function (obj) {
+                    var pageindex = obj.curr;
+                    //读取后台数据返回json后拼接
+                    load_blog_data(pageindex);
+                }
+            })
+        })
+    });
+    //加载第x页数据
+    function load_blog_data(pageindex) {
+        console.log("加载第" + pageindex + "页");        
+        var url = "/Admin/Blog/GetBlogList?pageIndex=" + pageindex + "&pagesize=" + pagesize;
+        layui.use(['laypage', 'layer'], function () {
+            var laypage = layui.laypage, layer = layui.layer, $ = layui.jquery;
+            $('#pageIndex').html(pageindex);
+            var postData = getdata();
+            $.post(url, postData, function (json) {
+                var html = '';
+                $.each(json, function (i, blog) {
+                    html += '<tr>';
+                    html += '<td>' + blog.createDate + '</td >';
+                    html += '<td>' + blog.title + '</td >';
+                    html += '<td>' + blog.categoryName + '</td >';
+                    html += '<td>' + blog.visitNum + '</td >';
+                    html += '<td>' + blog.sort + '</td >';
+                    html += '<td>';
+                    html += '<a href="/Admin/Blog/Add/' + blog.id + '"><i class="layui-icon">&#xe642;</i>编辑</a>';
+                    html += '<a href="javascript:void()0" onclick="del(' + blog.id + ')"><i class="layui-icon">&#xe640;</i>删除</a>';
+                    html += '</td>';
+                    html += '</tr>';
+                })
+                $('#tbody').html(html);
+            }, 'json');
+        })
+    }
+
+    //拼接条件返回postData
+    function getdata() {
+        var key = document.getElementById("search_key").value;
+        var start = document.getElementById("search_start").value;
+        var end = document.getElementById("search_end").value;
+        var number = document.getElementById("search_number").value;
+        var postData = {
+            key:key,
+            start:start,
+            end:end,
+            number:number
+        };
+        return postData;
+    }
+
+    //按条件查询
+    function search() {
+        layui.use(['laypage', 'layer'], function () {
+            var laypage = layui.laypage, layer = layui.layer, $ = layui.jquery;
+            var url = "/Admin/Blog/GetBlogTotalCount?t=" + new Date().valueOf();
+            var postData = getdata();
+            $.post(url, postData, function (count) {
+                console.log("取到的博客总数：" + count);
+                $('#totalCount').html(count);
+                $('#pageCount').html(Math.ceil(count / pagesize));
+                //执行一个laypage实例
+                laypage({
+                    cont: 'pages',
+                    pages: Math.ceil(count / pagesize),//js数据除法带小数
+                    jump: function (obj) {
+                        var pageindex = obj.curr;
+                        //读取后台数据返回json后拼接
+                        load_blog_data(pageindex);
+                    }
+                })
+            })
+        });
+    }
+
+    //删除
+    function del(id) {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            var $ = layui.jquery;
+            layer.confirm('是否删除？', function () {
+                var url = "/Admin/Blog/Del/" + id;
+                $.post(url, function (data) {
+                    layer.alert(data, function () { location.reload(); });
+                })
+            })
+        })
+    }
+</script>

@@ -1,0 +1,12 @@
+C:\Users\MY\source\repos\MyBlogDemo\My.Blog.DAL\bin\Debug\netcoreapp2.1\My.Blog.DAL.deps.json
+C:\Users\MY\source\repos\MyBlogDemo\My.Blog.DAL\bin\Debug\netcoreapp2.1\My.Blog.DAL.dll
+C:\Users\MY\source\repos\MyBlogDemo\My.Blog.DAL\obj\Debug\netcoreapp2.1\My.Blog.DAL.csprojAssemblyReference.cache
+C:\Users\MY\source\repos\MyBlogDemo\My.Blog.DAL\obj\Debug\netcoreapp2.1\My.Blog.DAL.csproj.CoreCompileInputs.cache
+C:\Users\MY\source\repos\MyBlogDemo\My.Blog.DAL\obj\Debug\netcoreapp2.1\My.Blog.DAL.AssemblyInfoInputs.cache
+C:\Users\MY\source\repos\MyBlogDemo\My.Blog.DAL\obj\Debug\netcoreapp2.1\My.Blog.DAL.AssemblyInfo.cs
+C:\Users\MY\source\repos\MyBlogDemo\My.Blog.DAL\bin\Debug\netcoreapp2.1\My.Blog.DAL.pdb
+C:\Users\MY\source\repos\MyBlogDemo\My.Blog.DAL\obj\Debug\netcoreapp2.1\My.Blog.DAL.dll
+C:\Users\MY\source\repos\MyBlogDemo\My.Blog.DAL\obj\Debug\netcoreapp2.1\My.Blog.DAL.pdb
+C:\Users\MY\source\repos\MyBlogDemo\My.Blog.DAL\bin\Debug\netcoreapp2.1\My.Blog.Model.dll
+C:\Users\MY\source\repos\MyBlogDemo\My.Blog.DAL\bin\Debug\netcoreapp2.1\My.Blog.Model.pdb
+C:\Users\MY\source\repos\MyBlogDemo\My.Blog.DAL\obj\Debug\netcoreapp2.1\My.Blog.DAL.csproj.CopyComplete
